@@ -118,7 +118,7 @@ class ExpressionChecker:
         return self.check_call_expr_with_callee_type(callee_type, e)
 
     def check_call_expr_with_callee_type(self, callee_type: Type,
-                                         e: CallExpr) -> Type:
+                                         e: CallExpr) -> int:
         """Type check call expression.
 
         The given callee type overrides the type of the callee
