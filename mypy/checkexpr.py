@@ -179,6 +179,10 @@ class ExpressionChecker:
         arg_messages = arg_messages or self.msg
         is_var_arg = nodes.ARG_STAR in arg_kinds
         if isinstance(callee, CallableType):
+            if callee.is_type_obj() and callee.type_object().fallback_to_any:
+                self.infer_arg_types_in_context(None, args)
+                return callee.ret_type, AnyType()
+
             if callee.is_type_obj() and callee.type_object().is_abstract:
                 type = callee.type_object()
                 self.msg.cannot_instantiate_abstract_class(

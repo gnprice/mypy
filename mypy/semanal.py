@@ -668,6 +668,7 @@ class SemanticAnalyzer(NodeVisitor):
             elif isinstance(base, AnyType):
                 # We don't know anything about the base class. Make any unknown attributes
                 # have type 'Any'.
+                # WORK HERE use, perh rename
                 defn.info.fallback_to_any = True
             elif not isinstance(base, UnboundType):
                 self.fail('Invalid base class', base_expr)
