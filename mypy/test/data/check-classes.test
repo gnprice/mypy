@@ -306,6 +306,13 @@ class B(A):
         return 1
 
 
+[case foo]
+# Model has __init__(self, x, y)
+from model import Model # type: ignore
+class Blah(Model): pass
+Blah(1, 2)
+
+
 -- Constructors
 -- ------------
 
