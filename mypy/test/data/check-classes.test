@@ -355,6 +355,12 @@ class D: pass
 [out]
 main:3: error: Argument 1 to "B" has incompatible type "D"; expected "C"
 
+[case testConstructorFromBaseAny]
+from typing import Any
+A = None # type: Any
+class B(A): pass
+B(1, '2', three=(4,))
+
 [case testOverridingWithIncompatibleConstructor]
 import typing
 A()    # Fail
