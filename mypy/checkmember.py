@@ -293,6 +293,10 @@ def type_object_type(info: TypeInfo, builtin_type: Callable[[str], Instance]) ->
             if new_method and new_method.info.fullname() != 'builtins.object':
                 # Found one! Get signature from __new__.
                 return type_object_type_from_function(new_method, info, fallback)
+
+            # No non-default __init__ or __new__ see if an Any base might override.
+            if info.fallback_to_any:
+                pass # WORK HERE
         # Construct callable type based on signature of __init__. Adjust
         # return type and insert type arguments.
         return type_object_type_from_function(init_method, info, fallback)
