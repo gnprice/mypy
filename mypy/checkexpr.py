@@ -179,7 +179,7 @@ class ExpressionChecker:
         arg_messages = arg_messages or self.msg
         is_var_arg = nodes.ARG_STAR in arg_kinds
         if isinstance(callee, CallableType):
-            if callee.is_type_obj() and callee.type_object().fallback_to_any:
+            if callee.is_type_obj() and callee.type_object().has_base_any:
                 self.infer_arg_types_in_context(None, args)
                 return callee.ret_type, AnyType()
 

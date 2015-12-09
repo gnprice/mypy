@@ -134,7 +134,7 @@ def analyze_member_var_access(name: str, itype: Instance, info: TypeInfo,
                 if isinstance(getattr_type, CallableType):
                     return getattr_type.ret_type
 
-    if itype.type.fallback_to_any:
+    if itype.type.has_base_any:
         return AnyType()
 
     # Could not find the member.
@@ -216,7 +216,7 @@ def analyze_class_attribute_access(itype: Instance,
                                    msg: MessageBuilder) -> Type:
     node = itype.type.get(name)
     if not node:
-        if itype.type.fallback_to_any:
+        if itype.type.has_base_any:
             return AnyType()
         return None
 

@@ -1499,7 +1499,7 @@ class TypeInfo(SymbolNode):
     # base class with type 'Any', but other use cases may be
     # possible. This is similar to having __getattr__ that returns Any
     # (and __setattr__), but without the __getattr__ method.
-    fallback_to_any = False
+    has_base_any = False
 
     # Information related to type annotations.
 

@@ -666,10 +666,11 @@ class SemanticAnalyzer(NodeVisitor):
             elif isinstance(base, TupleType):
                 assert False, "Internal error: Unexpected TupleType base class"
             elif isinstance(base, AnyType):
-                # We don't know anything about the base class. Make any unknown attributes
-                # have type 'Any'.
-                # WORK HERE use, perh rename
-                defn.info.fallback_to_any = True
+                # We don't know anything about the base class.
+                # Unknown attributes could be anything, as could the
+                # inherited __init__.
+                # WORK HERE comments around other mentions
+                defn.info.has_base_any = True
             elif not isinstance(base, UnboundType):
                 self.fail('Invalid base class', base_expr)
             if isinstance(base, Instance):
@@ -692,7 +693,7 @@ class SemanticAnalyzer(NodeVisitor):
             if defn.info.mro[-1].fullname() != 'builtins.object':
                 defn.info.mro.append(self.object_type().type)
         # The property of falling back to Any is inherited.
-        defn.info.fallback_to_any = any(baseinfo.fallback_to_any for baseinfo in defn.info.mro)
+        defn.info.has_base_any = any(baseinfo.has_base_any for baseinfo in defn.info.mro)
 
     def expr_to_analyzed_type(self, expr: Node) -> Type:
         if isinstance(expr, CallExpr):
