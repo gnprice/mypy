@@ -361,6 +361,17 @@ A = None # type: Any
 class B(A): pass
 B(1, '2', three=(4,))
 
+[case testOverrideConstructorFromBaseAny]
+from typing import Any
+A = None # type: Any
+class B(A):
+    def __init__(self, x: int) -> None: pass
+B(1, '2', three=(4,))
+B()
+[out]
+main:5: error: Too many arguments for "B"
+main:6: error: Too few arguments for "B"
+
 [case testOverridingWithIncompatibleConstructor]
 import typing
 A()    # Fail
