@@ -39,6 +39,8 @@ def is_subtype(left: Type, right: Type,
     between the type arguments (e.g., A and B), taking the variance of the
     type var into account.
     """
+    # TODO(gregprice) assert not isinstance(right, UnboundType)
+    # these shouldn't be leaked beyond semanal -- replace with Any
     if (isinstance(right, AnyType) or isinstance(right, UnboundType)
             or isinstance(right, ErasedType)):
         return True
@@ -101,6 +103,8 @@ class SubtypeVisitor(TypeVisitor[bool]):
                                                  self.right,
                                                  self.check_type_parameter):
                 return True
+
+            # TODO eliminate the `builtins.object` special case? should be in mro
             rname = right.type.fullname()
             if not left.type.has_base(rname) and rname != 'builtins.object':
                 return False
