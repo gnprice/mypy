@@ -106,8 +106,12 @@ class SubtypeVisitor(TypeVisitor[bool]):
                                                  self.check_type_parameter):
                 return True
 
-            # TODO eliminate the `builtins.object` special case? should be in mro
             rname = right.type.fullname()
+            if rname == 'builtins.object':
+                # TODO this passes in unit tests; eliminate special case below,
+                # and also add assertion in properly broader spot like where
+                # mro is constructed
+                assert left.type.has_base(rname)
             if not left.type.has_base(rname) and rname != 'builtins.object':
                 return False
 
