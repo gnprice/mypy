@@ -39,8 +39,10 @@ def is_subtype(left: Type, right: Type,
     between the type arguments (e.g., A and B), taking the variance of the
     type var into account.
     """
-    # TODO(gregprice) assert not isinstance(right, UnboundType)
-    # these shouldn't be leaked beyond semanal -- replace with Any
+    # TODO these shouldn't be leaked beyond semanal -- replace with Any.
+    # Currently fails in several unit tests in testtypes.
+    assert not isinstance(right, UnboundType)
+
     if (isinstance(right, AnyType) or isinstance(right, UnboundType)
             or isinstance(right, ErasedType)):
         return True
