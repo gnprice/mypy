@@ -798,36 +798,34 @@ class SemanticAnalyzer(NodeVisitor):
 
     def verify_base_classes(self, defn: ClassDef) -> bool:
         info = defn.info
-        for base in info.bases:
-            baseinfo = base.type
-            if self.is_base_class(info, baseinfo):
-                self.fail('Cycle in inheritance hierarchy', defn)
-                # Clear bases to forcefully get rid of the cycle.
-                info.bases = []
-            if baseinfo.fullname() == 'builtins.bool':
-                self.fail("'%s' is not a valid base class" %
-                          baseinfo.name(), defn)
-                return False
-        dup = find_duplicate(info.direct_base_classes())
+
+        dup = find_duplicate([base.type for base in info.bases])
         if dup:
             self.fail('Duplicate base class "%s"' % dup.name(), defn)
             return False
-        return True
 
-    def is_base_class(self, t: TypeInfo, s: TypeInfo) -> bool:
-        """Determine if t is a base class of s (but do not use mro)."""
-        # Search the base class graph for t, starting from s.
-        worklist = [s]
-        visited = {s}
+        for base in info.bases:
+            if base.type.fullname() == 'builtins.bool':
+                self.fail("'%s' is not a valid base class" %
+                          base.type.name(), defn)
+                return False
+
+        # Search the whole hierarchy of ancestor classes.
+        worklist = [base.type for base in info.bases]
+        visited = set(worklist)
         while worklist:
             nxt = worklist.pop()
-            if nxt == t:
-                return True
+            if nxt == info:
+                self.fail('Cycle in inheritance hierarchy', defn)
+                # Clear bases to forcefully get rid of the cycle.
+                info.bases = []
+                return False # ???
             for base in nxt.bases:
                 if base.type not in visited:
                     worklist.append(base.type)
                     visited.add(base.type)
-        return False
+
+        return True
 
     def analyze_metaclass(self, defn: ClassDef) -> None:
         if defn.metaclass:
