@@ -50,6 +50,8 @@ def class_derivation_paths(typ: TypeInfo,
     """
     # FIX: Currently we might only ever have a single path, so this could be
     #      simplified
+    # TODO(gregprice): Not actually true!  But all paths are equivalent for
+    # this module's purposes.
     result = []  # type: List[List[TypeInfo]]
 
     for base in typ.bases:

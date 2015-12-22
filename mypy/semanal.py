@@ -821,6 +821,9 @@ class SemanticAnalyzer(NodeVisitor):
                 info.bases = []
                 return False # ???
             for base in nxt.bases:
+                if base.type in visited and len(base.type.type_vars) > 0:
+                    self.fail('Diamond inheritance of generic base class "%s"'
+                              % base.type.name(), defn)
                 if base.type not in visited:
                     worklist.append(base.type)
                     visited.add(base.type)

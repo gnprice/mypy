@@ -219,6 +219,33 @@ main: note: In class "D":
 main:8: error: Definition of "clear" in base class "A" is incompatible with definition in base class "B"
 
 
+-- Diamond inheritance hierarchies
+-- -------------------------------
+
+
+[case testDiamondPlain]
+class A: pass
+class B(A): pass
+class C(A): pass
+class D(B, C): pass
+
+a = None # type: A
+d = None # type: D
+a = d
+
+[case testDiamondGeneric]
+from typing import TypeVar, Generic
+T = TypeVar('T')
+class A(Generic[T]): pass
+class B(Generic[T], A[T]): pass
+class C(Generic[T], A[T]): pass
+class D(Generic[T], B[T], C[T]): pass # E: Diamond inheritance of generic base class "A"
+
+a = None # type: A[int]
+d = None # type: D[int]
+a = d
+
+
 -- Special cases
 -- -------------
 
