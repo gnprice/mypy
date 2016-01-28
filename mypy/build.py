@@ -161,8 +161,9 @@ def build(sources: List[BuildSource],
         for source in sources:
             if source.path:
                 # Include directory of the program file in the module search path.
-                lib_path.insert(
-                    0, remove_cwd_prefix_from_path(dirname(source.path)))
+                path_candidate = remove_cwd_prefix_from_path(dirname(source.path))
+                if path_candidate not in lib_path:
+                    lib_path.insert(0, path_candidate)
 
         # Do this even if running as a file, for sanity (mainly because with
         # multiple builds, there could be a mix of files/modules, so its easier
